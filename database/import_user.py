@@ -2,7 +2,7 @@ import boto3
 from botocore.exceptions import ClientError
 
 # Initialisation du client DynamoDB
-dynamodb = boto3.resource('dynamodb')
+dynamodb = boto3.resource('dynamodb', region_name ='eu-west-3')
 table = dynamodb.Table('Users')  # Remplacez par le nom réel de votre table
 
 # Liste d'utilisateurs à ajouter à la table
