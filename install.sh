@@ -5,10 +5,9 @@ sudo apt install pip -y
 touch cronlog.log
 
 echo Installation des packages nécessaires...
-cd Live-Tools-V2
+cd QTS
 sudo apt-get install python3-venv
 python3 -m venv .venv
 source .venv/bin/activate
 pip install -r requirements.txt
-git update-index --assume-unchanged secret.py
 cd ..

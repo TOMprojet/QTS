@@ -1,7 +1,7 @@
-# Live-Tools-V2
+# QTS
 
 ## Set up
 
-> git clone https://github.com/CryptoRobotFr/Live-Tools-V2.git
+> git clone https://github.com/TOMprojet/QTS.git
 
 > bash Live-Tools-V2/install.sh

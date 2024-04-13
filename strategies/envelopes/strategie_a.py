@@ -1,188 +1,34 @@
 import datetime
-import sys
-
-sys.path.append("./Live-Tools-V2")
-
 import asyncio
-from utilities.bitget_perp import PerpBitget
-from secret import ACCOUNTS
+import sys
 import ta
+from utilities.bitget_perp import PerpBitget
+from database.db import fetch_user_configs
+from config.config_strat_a import params
 
+# Ajustement pour la compatibilité Windows avec asyncio
 if sys.platform == "win32":
     asyncio.set_event_loop_policy(asyncio.WindowsSelectorEventLoopPolicy())
 
-
-async def main():
-    account = ACCOUNTS["bitget1"]
-
-    margin_mode = "isolated"  # isolated or crossed
-    exchange_leverage = 3
-
-    tf = "1h"
-    size_leverage = 3
-    sl = 0.3
-    params = {
-        "BTC/USDT": {
-            "src": "close",
-            "ma_base_window": 7,
-            "envelopes": [0.07, 0.1, 0.15],
-            "size": 0.1,
-            "sides": ["long", "short"],
-        },
-        "ETH/USDT": {
-            "src": "close",
-            "ma_base_window": 5,
-            "envelopes": [0.07, 0.1, 0.15],
-            "size": 0.1,
-            "sides": ["long", "short"],
-        },
-        "ADA/USDT": {
-            "src": "close",
-            "ma_base_window": 5,
-            "envelopes": [0.07, 0.09, 0.12, 0.15],
-            "size": 0.1,
-            "sides": ["long", "short"],
-        },
-        "AVAX/USDT": {
-            "src": "close",
-            "ma_base_window": 5,
-            "envelopes": [0.07, 0.09, 0.12, 0.15],
-            "size": 0.1,
-            "sides": ["long", "short"],
-        },
-        "EGLD/USDT": {
-            "src": "close",
-            "ma_base_window": 5,
-            "envelopes": [0.07, 0.1, 0.15, 0.2],
-            "size": 0.05,
-            "sides": ["long", "short"],
-        },
-        "KSM/USDT": {
-            "src": "close",
-            "ma_base_window": 5,
-            "envelopes": [0.07, 0.1, 0.15, 0.2],
-            "size": 0.05,
-            "sides": ["long", "short"],
-        },
-        "OCEAN/USDT": {
-            "src": "close",
-            "ma_base_window": 5,
-            "envelopes": [0.07, 0.1, 0.15, 0.2],
-            "size": 0.05,
-            "sides": ["long", "short"],
-        },
-        "REN/USDT": {
-            "src": "close",
-            "ma_base_window": 5,
-            "envelopes": [0.07, 0.1, 0.15, 0.2],
-            "size": 0.05,
-            "sides": ["long", "short"],
-        },
-        "ACH/USDT": {
-            "src": "close",
-            "ma_base_window": 5,
-            "envelopes": [0.07, 0.1, 0.15, 0.2],
-            "size": 0.05,
-            "sides": ["long", "short"],
-        },
-        "APE/USDT": {
-            "src": "close",
-            "ma_base_window": 5,
-            "envelopes": [0.07, 0.1, 0.15, 0.2],
-            "size": 0.05,
-            "sides": ["long", "short"],
-        },
-        "CRV/USDT": {
-            "src": "close",
-            "ma_base_window": 5,
-            "envelopes": [0.07, 0.1, 0.15, 0.2],
-            "size": 0.05,
-            "sides": ["long", "short"],
-        },
-        "DOGE/USDT": {
-            "src": "close",
-            "ma_base_window": 5,
-            "envelopes": [0.07, 0.1, 0.15, 0.2],
-            "size": 0.05,
-            "sides": ["long", "short"],
-        },
-        "ENJ/USDT": {
-            "src": "close",
-            "ma_base_window": 5,
-            "envelopes": [0.07, 0.1, 0.15, 0.2],
-            "size": 0.05,
-            "sides": ["long", "short"],
-        },
-        "FET/USDT": {
-            "src": "close",
-            "ma_base_window": 5,
-            "envelopes": [0.07, 0.1, 0.15, 0.2],
-            "size": 0.05,
-            "sides": ["long", "short"],
-        },
-        "ICP/USDT": {
-            "src": "close",
-            "ma_base_window": 5,
-            "envelopes": [0.07, 0.1, 0.15, 0.2],
-            "size": 0.05,
-            "sides": ["long", "short"],
-        },
-        "IMX/USDT": {
-            "src": "close",
-            "ma_base_window": 5,
-            "envelopes": [0.07, 0.1, 0.15, 0.2],
-            "size": 0.05,
-            "sides": ["long", "short"],
-        },
-        "LDO/USDT": {
-            "src": "close",
-            "ma_base_window": 5,
-            "envelopes": [0.07, 0.1, 0.15, 0.2],
-            "size": 0.05,
-            "sides": ["long", "short"],
-        },
-        "MAGIC/USDT": {
-            "src": "close",
-            "ma_base_window": 5,
-            "envelopes": [0.07, 0.1, 0.15, 0.2],
-            "size": 0.05,
-            "sides": ["long", "short"],
-        },
-        "REEF/USDT": {
-            "src": "close",
-            "ma_base_window": 5,
-            "envelopes": [0.07, 0.1, 0.15, 0.2],
-            "size": 0.05,
-            "sides": ["long", "short"],
-        },
-        "SAND/USDT": {
-            "src": "close",
-            "ma_base_window": 5,
-            "envelopes": [0.07, 0.1, 0.15, 0.2],
-            "size": 0.05,
-            "sides": ["long", "short"],
-        },
-        "TRX/USDT": {
-            "src": "close",
-            "ma_base_window": 5,
-            "envelopes": [0.07, 0.1, 0.15, 0.2],
-            "size": 0.05,
-            "sides": ["long", "short"],
-        },
-        "XTZ/USDT": {
-            "src": "close",
-            "ma_base_window": 5,
-            "envelopes": [0.07, 0.1, 0.15, 0.2],
-            "size": 0.05,
-            "sides": ["long", "short"],
-        },
-    }
-
+async def execute_strategy_a_for_user(account_config,exchange):
+    print(f"--- Exécution commencée pour {account_config['user_id']} à {datetime.datetime.now().strftime('%Y-%m-%d %H:%M:%S')} ---")
+    
     exchange = PerpBitget(
-        public_api=account["public_api"],
-        secret_api=account["secret_api"],
-        password=account["password"],
+        public_api=account_config["public_api"],
+        secret_api=account_config["secret_api"],
+        password=account_config.get("password", ""),
     )
+
+    # Configuration initiale de l'échange, telle que le chargement des marchés
+    await exchange.load_markets()
+
+    # Exemple de configuration de stratégie. Adaptez ceci selon votre logique de trading spécifique.
+    margin_mode = "crossed"  # Ou 'isolated'
+    exchange_leverage = 5  # Exemple de levier
+    tf = "1h"  # Intervalle de temps pour les données OHLCV
+    sl = 0.3  # Stop loss en pourcentage
+    size_leverage = 5
+
     invert_side = {"long": "sell", "short": "buy"}
     print(f"--- Execution started at {datetime.datetime.now().strftime('%Y-%m-%d %H:%M:%S')} ---")
     try:
@@ -456,12 +302,18 @@ async def main():
         print(f"Placing {len(tasks_open)} open limit order...")
         await asyncio.gather(*tasks_open)  # Limit orders when not in positions
 
+        # Assurez-vous de fermer la session à la fin
         await exchange.close()
-        print(f"--- Execution finished at {datetime.datetime.now().strftime('%Y-%m-%d %H:%M:%S')} ---")
+        print(f"--- Exécution terminée pour {account_config['user_id']} à {datetime.datetime.now().strftime('%Y-%m-%d %H:%M:%S')} ---")
+
     except Exception as e:
         await exchange.close()
         raise e
 
+async def main():
+    user_configs = fetch_user_configs()  # Récupère les configs utilisateur depuis DynamoDB
+    tasks = [execute_strategy_a_for_user(config) for config in user_configs]
+    await asyncio.gather(*tasks)
 
 if __name__ == "__main__":
     asyncio.run(main())
