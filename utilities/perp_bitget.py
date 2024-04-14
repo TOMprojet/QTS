@@ -4,6 +4,7 @@ import time
 from multiprocessing.pool import ThreadPool as Pool
 import numpy as np
 import ccxt.async_support as ccxt
+import asyncio
 
 class PerpBitget2():
     def __init__(self, public_api=None, secret_api=None, password=None):
@@ -24,8 +25,8 @@ class PerpBitget2():
             self._auth = True
             self._session = ccxt.bitget(bitget_auth_object)
     
-    def load_markets(self):
-        self.market = self._session.load_markets()
+    async def load_markets(self):
+        self.market = await self._session.load_markets()
 
     def authentication_required(fn):
         """Annotation for methods that require auth."""
