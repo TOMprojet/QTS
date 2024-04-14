@@ -24,8 +24,8 @@ class PerpBitget2():
             self._auth = True
             self._session = ccxt.bitget(bitget_auth_object)
     
-    async def load_markets(self):
-        self.market = await self._session.load_markets()
+    def load_markets(self):
+        self.market = self._session.load_markets()
 
     def authentication_required(fn):
         """Annotation for methods that require auth."""
