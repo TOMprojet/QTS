@@ -12,7 +12,7 @@ if sys.platform == "win32":
 
 async def execute_strategy_a_for_user(account_config,exchange):
     print(f"--- Exécution commencée pour {account_config['user_id']} à {datetime.datetime.now().strftime('%Y-%m-%d %H:%M:%S')} ---")
-    
+
     # Exemple de configuration de stratégie. Adaptez ceci selon votre logique de trading spécifique.
     margin_mode = "crossed"  # Ou 'isolated'
     exchange_leverage = 5  # Exemple de levier
@@ -163,10 +163,10 @@ async def execute_strategy_a_for_user(account_config,exchange):
             )
             if position.side == "long":
                 sl_side = "sell"
-                sl_price = exchange.price_to_precision(position.pair, position.entry_price * (1 - sl))
+                sl_price = await exchange.price_to_precision(position.pair, position.entry_price * (1 - sl))
             elif position.side == "short":
                 sl_side = "buy"
-                sl_price = exchange.price_to_precision(position.pair, position.entry_price * (1 + sl))
+                sl_price = await exchange.price_to_precision(position.pair, position.entry_price * (1 + sl))
             tasks_close.append(
                 exchange.place_trigger_order(
                     pair=position.pair,
@@ -189,10 +189,10 @@ async def execute_strategy_a_for_user(account_config,exchange):
                     exchange.place_trigger_order(
                         pair=position.pair,
                         side="buy",
-                        price=exchange.price_to_precision(
+                        price= await exchange.price_to_precision(
                             position.pair, row[f"ma_low_{i+1}"]
                         ),
-                        trigger_price=exchange.price_to_precision(
+                        trigger_price= await exchange.price_to_precision(
                             position.pair, row[f"ma_low_{i+1}"] * 1.005
                         ),
                         size=(
@@ -216,10 +216,10 @@ async def execute_strategy_a_for_user(account_config,exchange):
                     exchange.place_trigger_order(
                         pair=position.pair,
                         side="sell",
-                        trigger_price=exchange.price_to_precision(
+                        trigger_price= await exchange.price_to_precision(
                             position.pair, row[f"ma_high_{i+1}"] * 0.995
                         ),
-                        price=exchange.price_to_precision(
+                        price= await exchange.price_to_precision(
                             position.pair, row[f"ma_high_{i+1}"]
                         ),
                         size=(
@@ -252,8 +252,8 @@ async def execute_strategy_a_for_user(account_config,exchange):
                         exchange.place_trigger_order(
                             pair=pair,
                             side="buy",
-                            price=exchange.price_to_precision(pair, row[f"ma_low_{i+1}"]),
-                            trigger_price=exchange.price_to_precision(
+                            price= await exchange.price_to_precision(pair, row[f"ma_low_{i+1}"]),
+                            trigger_price= await exchange.price_to_precision(
                                 pair, row[f"ma_low_{i+1}"] * 1.005
                             ),
                             size=(
@@ -273,10 +273,10 @@ async def execute_strategy_a_for_user(account_config,exchange):
                         exchange.place_trigger_order(
                             pair=pair,
                             side="sell",
-                            trigger_price=exchange.price_to_precision(
+                            trigger_price= await exchange.price_to_precision(
                                 pair, row[f"ma_high_{i+1}"] * 0.995
                             ),
-                            price=exchange.price_to_precision(pair, row[f"ma_high_{i+1}"]),
+                            price= await exchange.price_to_precision(pair, row[f"ma_high_{i+1}"]),
                             size=(
                                 (params[pair]["size"] * usdt_balance)
                                 / len(params[pair]["envelopes"])
