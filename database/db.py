@@ -6,7 +6,7 @@ async def fetch_user_configs():
         table = await dynamodb.Table('Users')
 
     # Utilisation de la fonction scan pour récupérer seulement les attributs spécifiques
-    response = table.scan(
+    response = await table.scan(
         ProjectionExpression="public_key, secret_key, password_api, strategy"
     )
 
