@@ -12,12 +12,6 @@ if sys.platform == "win32":
 
 async def execute_strategy_a_for_user(account_config,exchange):
     print(f"--- Exécution commencée pour {account_config['user_id']} à {datetime.datetime.now().strftime('%Y-%m-%d %H:%M:%S')} ---")
-    
-    exchange = PerpBitget(
-        public_api=account_config["public_api"],
-        secret_api=account_config["secret_api"],
-        password=account_config.get("password", ""),
-    )
 
     # Configuration initiale de l'échange, telle que le chargement des marchés
     await exchange.load_markets()
