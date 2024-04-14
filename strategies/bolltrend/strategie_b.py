@@ -65,11 +65,16 @@ async def execute_strategy_b_for_user(account_config, exchange):
     # Get data
     df_list = {}
     for pair in params2:
-        temp_data = await exchange.get_more_last_historical_async(pair, tf, 1000)
-        if len(temp_data) == 990:
-            df_list[pair] = temp_data
-        else:
-            print(f"Pair {pair} not loaded, length: {len(temp_data)}")
+        try:
+            temp_data = await exchange.get_more_last_historical_async(pair, tf, 1000)
+            # Assurez-vous que la longueur des données correspond à ce que vous attendez
+            if len(temp_data) == 1000:  # ou toute autre condition logique appropriée
+                df_list[pair] = temp_data
+            else:
+                print(f"Pair {pair} not loaded, length: {len(temp_data)}")
+        except Exception as e:
+            print(f"An error occurred while loading data for {pair}: {e}")
+
     print("Data OHLCV loaded 100%")
 
     for pair in df_list:
