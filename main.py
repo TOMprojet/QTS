@@ -27,7 +27,6 @@ async def main():
             await exchange1.close()
         elif account_config["strategy"] == "B":
             execute_strategy_b_for_user(account_config, exchange2)
-            exchange2.close()
 
 if __name__ == "__main__":
     asyncio.run(main())
