@@ -24,12 +24,10 @@ async def main():
         # Exécuter la stratégie A ou B selon la configuration de l'utilisateur
         if account_config["strategy"] == "A":
             await execute_strategy_a_for_user(account_config, exchange1)
+            await exchange1.close()
         elif account_config["strategy"] == "B":
             await execute_strategy_b_for_user(account_config, exchange2)
-
-        # Assurez-vous de fermer l'échange après l'exécution de la stratégie
-        await exchange1.close()
-        await exchange2.close()
+            await exchange2.close()
 
 if __name__ == "__main__":
     asyncio.run(main())
