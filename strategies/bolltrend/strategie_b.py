@@ -4,7 +4,7 @@ import sys
 import ta
 from utilities.bitget_perp import PerpBitget
 from database.db import fetch_user_configs
-from config.config_strat_a import params2
+from config.config_strat_b import params2
 from utilities.var import ValueAtRisk
 import copy
 
@@ -12,7 +12,7 @@ import copy
 if sys.platform == "win32":
     asyncio.set_event_loop_policy(asyncio.WindowsSelectorEventLoopPolicy())
 
-async def execute_strategy_b_for_user(account_config,exchange):
+async def execute_strategy_b_for_user(account_config, exchange):
     print(f"--- Exécution commencée pour {account_config['user_id']} à {datetime.datetime.now().strftime('%Y-%m-%d %H:%M:%S')} ---")
 
     # Configuration initiale de l'échange, telle que le chargement des marchés
