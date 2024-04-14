@@ -8,8 +8,6 @@ async def main():
     user_configs = fetch_user_configs()  # Assurez-vous que fetch_user_configs est une fonction asynchrone si nécessaire
 
     for account_config in user_configs:
-        print(f"--- Exécution commencée pour l'utilisateur {account_config['user_id']} ---")
-
         # Initialiser l'objet PerpBitget une seule fois par utilisateur
         exchange = PerpBitget(
             public_api=account_config["public_key"],

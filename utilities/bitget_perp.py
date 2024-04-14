@@ -62,7 +62,7 @@ class Position(BaseModel):
     stop_loss_price: float
 
 
-class PerpBitget:
+class PerpBitget1:
     def __init__(self, public_api=None, secret_api=None, password=None):
         bitget_auth_object = {
             "apiKey": public_api,

@@ -2,7 +2,7 @@ import datetime
 import asyncio
 import sys
 import ta
-from utilities.bitget_perp import PerpBitget
+from utilities.bitget_perp import PerpBitget1
 from database.db import fetch_user_configs
 from config.config_strat_a import params
 
