@@ -5,22 +5,23 @@ from multiprocessing.pool import ThreadPool as Pool
 import numpy as np
 
 class PerpBitget2():
-    def __init__(self, apiKey=None, secret=None, password=None):
+    def __init__(self, public_api=None, secret_api=None, password=None):
         bitget_auth_object = {
-            "apiKey": apiKey,
-            "secret": secret,
+            "apiKey": public_api,
+            "secret": secret_api,
             "password": password,
-            'options': {
-            'defaultType': 'swap',
+            "enableRateLimit": True,
+            "rateLimit": 100,
+            "options": {
+                "defaultType": "future",
+            },
         }
-        }
-        if bitget_auth_object['secret'] == None:
+        if bitget_auth_object["secret"] == None:
             self._auth = False
             self._session = ccxt.bitget()
         else:
             self._auth = True
             self._session = ccxt.bitget(bitget_auth_object)
-        self.market = self._session.load_markets()
 
     def authentication_required(fn):
         """Annotation for methods that require auth."""
