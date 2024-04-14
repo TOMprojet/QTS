@@ -1,9 +1,9 @@
 import boto3
+import aioboto3
 
-def fetch_user_configs():
-    # Initialisation du client DynamoDB
-    dynamodb = boto3.resource('dynamodb', region_name='eu-west-3')
-    table = dynamodb.Table('Users')  # Remplacez par le nom réel de votre table
+async def fetch_user_configs():
+    async with aioboto3.resource('dynamodb', region_name='eu-west-3') as dynamodb:
+        table = await dynamodb.Table('Users')
 
     # Utilisation de la fonction scan pour récupérer seulement les attributs spécifiques
     response = table.scan(
@@ -25,4 +25,3 @@ def fetch_user_configs():
 
 # Appel de la fonction
 user_configs = fetch_user_configs()
-print(user_configs)
