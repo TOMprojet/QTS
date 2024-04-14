@@ -12,10 +12,7 @@ if sys.platform == "win32":
 
 async def execute_strategy_a_for_user(account_config,exchange):
     print(f"--- Exécution commencée pour {account_config['user_id']} à {datetime.datetime.now().strftime('%Y-%m-%d %H:%M:%S')} ---")
-
-    # Configuration initiale de l'échange, telle que le chargement des marchés
-    await exchange.load_markets()
-
+    
     # Exemple de configuration de stratégie. Adaptez ceci selon votre logique de trading spécifique.
     margin_mode = "crossed"  # Ou 'isolated'
     exchange_leverage = 5  # Exemple de levier
