@@ -7,7 +7,7 @@ from utilities.perp_bitget import PerpBitget2
 
 async def main():
     # Assurez-vous que fetch_user_configs est une fonction asynchrone si nécessaire
-    user_configs = await fetch_user_configs()
+    user_configs = fetch_user_configs()
 
     for account_config in user_configs:
         # Initialiser l'objet PerpBitget une seule fois par utilisateur
