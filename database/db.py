@@ -1,5 +1,6 @@
 import boto3
 import aioboto3
+import asyncio
 
 async def fetch_user_configs():
     session = aioboto3.Session()
