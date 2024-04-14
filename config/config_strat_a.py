@@ -31,7 +31,7 @@ params = {
             "src": "close",
             "ma_base_window": 5,
             "envelopes": [0.09, 0.12, 0.15],
-            "size": 0.05,
+            "size": 0.1,
             "sides": ["long", "short"],
         },
         "MATIC/USDT": {
