@@ -4,7 +4,7 @@ import asyncio
 
 async def fetch_user_configs():
     session = aioboto3.Session()
-    async with aioboto3.resource('dynamodb', region_name='eu-west-3') as dynamodb:
+    async with session.resource('dynamodb', region_name='eu-west-3') as dynamodb:
         table = await dynamodb.Table('Users')
 
     # Utilisation de la fonction scan pour récupérer seulement les attributs spécifiques
