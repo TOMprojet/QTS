@@ -30,6 +30,7 @@ async def execute_strategy_b_for_user(account_config, exchange):
     try:
         await exchange.load_markets()
 
+        #Get Data
         for pair in params2.copy():
             info = exchange.get_pair_info(pair)
             if info is None:
@@ -88,16 +89,6 @@ async def execute_strategy_b_for_user(account_config, exchange):
                 return False
 
         print(f"--- Bollinger Trend on {len(params2)} tokens {tf} Leverage x{exchange_leverage} ---")
-
-        # Get data
-        df_list = {}
-        for pair in params2:
-            temp_data = await exchange.get_more_last_historical_async(pair, tf, 1000)
-            if len(temp_data) == 990:
-                df_list[pair] = temp_data
-            else:
-                print(f"Pair {pair} not loaded, length: {len(temp_data)}")
-        print("Data OHLCV loaded 100%")
 
         for pair in df_list:
             df = df_list[pair]

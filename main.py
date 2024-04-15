@@ -18,9 +18,9 @@ async def main():
         )
 
 
-        if account_config["strategy"] == "A":
-            await execute_strategy_a_for_user(account_config, exchange)
-        elif account_config["strategy"] == "B":
+#        if account_config["strategy"] == "A":
+#            await execute_strategy_a_for_user(account_config, exchange)
+        if account_config["strategy"] == "B":
             await execute_strategy_b_for_user(account_config, exchange)
 
         await exchange.close()
