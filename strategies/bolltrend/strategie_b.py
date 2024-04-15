@@ -15,6 +15,17 @@ if sys.platform == "win32":
 async def execute_strategy_b_for_user(account_config, exchange):
     print(f"--- Exécution commencée pour {account_config['user_id']} à {datetime.datetime.now().strftime('%Y-%m-%d %H:%M:%S')} ---")
 
+    # Exemple de configuration de stratégie. Adaptez ceci selon votre logique de trading spécifique.
+    margin_mode = "crossed"  # Ou 'isolated'
+    exchange_leverage = 5  # Exemple de levier
+    tf = "1h"  # Intervalle de temps pour les données OHLCV
+    sl = 0.3  # Stop loss en pourcentage
+    size_leverage = 5
+    max_var = 1
+    max_side_exposition = 1
+    production = True
+
+
     # Configuration initiale de l'échange, telle que le chargement des marchés
     try:
         await exchange.load_markets()
@@ -43,16 +54,6 @@ async def execute_strategy_b_for_user(account_config, exchange):
         tasks = [exchange.get_last_ohlcv(pair, tf, 50) for pair in pairs]
         dfs = await asyncio.gather(*tasks)
         df_list = dict(zip(pairs, dfs))
-
-        # Exemple de configuration de stratégie. Adaptez ceci selon votre logique de trading spécifique.
-        margin_mode = "crossed"  # Ou 'isolated'
-        exchange_leverage = 5  # Exemple de levier
-        tf = "1h"  # Intervalle de temps pour les données OHLCV
-        sl = 0.3  # Stop loss en pourcentage
-        size_leverage = 5
-        max_var = 1
-        max_side_exposition = 1
-        production = True
 
         def open_long(row):
             if (
