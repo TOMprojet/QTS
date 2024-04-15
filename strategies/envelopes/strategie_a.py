@@ -14,9 +14,9 @@ async def execute_strategy_a_for_user(account_config, exchange):
     print(f"--- Exécution commencée pour {account_config['user_id']} à {datetime.datetime.now().strftime('%Y-%m-%d %H:%M:%S')} ---")
 
     margin_mode = "isolated"  # isolated or crossed
-    exchange_leverage = 3
+    exchange_leverage = 5
     tf = "1h"
-    size_leverage = 3
+    size_leverage = 5
     sl = 0.3
     invert_side = {"long": "sell", "short": "buy"}
 
