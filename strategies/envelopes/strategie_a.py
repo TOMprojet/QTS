@@ -6,22 +6,20 @@ from utilities.bitget_perp import PerpBitget
 from database.db import fetch_user_configs
 from config.config_strat_a import params
 
-# Ajustement pour la compatibilité Windows avec asyncio
 if sys.platform == "win32":
     asyncio.set_event_loop_policy(asyncio.WindowsSelectorEventLoopPolicy())
 
-async def execute_strategy_a_for_user(account_config,exchange):
+
+async def execute_strategy_a_for_user(account_config, exchange):
     print(f"--- Exécution commencée pour {account_config['user_id']} à {datetime.datetime.now().strftime('%Y-%m-%d %H:%M:%S')} ---")
 
-    # Exemple de configuration de stratégie. Adaptez ceci selon votre logique de trading spécifique.
-    margin_mode = "crossed"  # Ou 'isolated'
-    exchange_leverage = 5  # Exemple de levier
-    tf = "1h"  # Intervalle de temps pour les données OHLCV
-    sl = 0.3  # Stop loss en pourcentage
-    size_leverage = 5
-
+    margin_mode = "isolated"  # isolated or crossed
+    exchange_leverage = 3
+    tf = "1h"
+    size_leverage = 3
+    sl = 0.3
     invert_side = {"long": "sell", "short": "buy"}
-    print(f"--- Execution started at {datetime.datetime.now().strftime('%Y-%m-%d %H:%M:%S')} ---")
+
     try:
         await exchange.load_markets()
 
@@ -34,7 +32,9 @@ async def execute_strategy_a_for_user(account_config,exchange):
         pairs = list(params.keys())
 
         try:
-            print(f"Setting {margin_mode} x{exchange_leverage} on {len(pairs)} pairs...")
+            print(
+                f"Setting {margin_mode} x{exchange_leverage} on {len(pairs)} pairs..."
+            )
             tasks = [
                 exchange.set_margin_mode_and_leverage(
                     pair, margin_mode, exchange_leverage
@@ -71,8 +71,6 @@ async def execute_strategy_a_for_user(account_config,exchange):
                 )
 
             df_list[pair] = df
-
-        
 
         usdt_balance = await exchange.get_balance()
         usdt_balance = usdt_balance.total
@@ -155,25 +153,30 @@ async def execute_strategy_a_for_user(account_config,exchange):
                     pair=position.pair,
                     side=invert_side[position.side],
                     price=row["ma_base"],
-                    size=position.size,
+                    size=exchange.amount_to_precision(position.pair, position.size),
                     type="limit",
                     reduce=True,
                     margin_mode=margin_mode,
+                    error=False,
                 )
             )
             if position.side == "long":
                 sl_side = "sell"
-                sl_price = exchange.price_to_precision(position.pair, position.entry_price * (1 - sl))
+                sl_price = exchange.price_to_precision(
+                    position.pair, position.entry_price * (1 - sl)
+                )
             elif position.side == "short":
                 sl_side = "buy"
-                sl_price = exchange.price_to_precision(position.pair, position.entry_price * (1 + sl))
+                sl_price = exchange.price_to_precision(
+                    position.pair, position.entry_price * (1 + sl)
+                )
             tasks_close.append(
                 exchange.place_trigger_order(
                     pair=position.pair,
                     side=sl_side,
                     trigger_price=sl_price,
                     price=None,
-                    size=position.size,
+                    size=exchange.amount_to_precision(position.pair, position.size),
                     type="market",
                     reduce=True,
                     margin_mode=margin_mode,
@@ -189,18 +192,21 @@ async def execute_strategy_a_for_user(account_config,exchange):
                     exchange.place_trigger_order(
                         pair=position.pair,
                         side="buy",
-                        price= exchange.price_to_precision(
+                        price=exchange.price_to_precision(
                             position.pair, row[f"ma_low_{i+1}"]
                         ),
-                        trigger_price= exchange.price_to_precision(
+                        trigger_price=exchange.price_to_precision(
                             position.pair, row[f"ma_low_{i+1}"] * 1.005
                         ),
-                        size=(
-                            (params[position.pair]["size"] * usdt_balance)
-                            / len(params[position.pair]["envelopes"])
-                            * size_leverage
-                        )
-                        / row[f"ma_low_{i+1}"],
+                        size=exchange.amount_to_precision(
+                            position.pair,
+                            (
+                                (params[position.pair]["size"] * usdt_balance)
+                                / len(params[position.pair]["envelopes"])
+                                * size_leverage
+                            )
+                            / row[f"ma_low_{i+1}"],
+                        ),
                         type="limit",
                         reduce=False,
                         margin_mode=margin_mode,
@@ -216,25 +222,27 @@ async def execute_strategy_a_for_user(account_config,exchange):
                     exchange.place_trigger_order(
                         pair=position.pair,
                         side="sell",
-                        trigger_price= exchange.price_to_precision(
+                        trigger_price=exchange.price_to_precision(
                             position.pair, row[f"ma_high_{i+1}"] * 0.995
                         ),
-                        price= exchange.price_to_precision(
+                        price=exchange.price_to_precision(
                             position.pair, row[f"ma_high_{i+1}"]
                         ),
-                        size=(
-                            (params[position.pair]["size"] * usdt_balance)
-                            / len(params[position.pair]["envelopes"])
-                            * size_leverage
-                        )
-                        / row[f"ma_high_{i+1}"],
+                        size=exchange.amount_to_precision(
+                            position.pair,
+                            (
+                                (params[position.pair]["size"] * usdt_balance)
+                                / len(params[position.pair]["envelopes"])
+                                * size_leverage
+                            )
+                            / row[f"ma_high_{i+1}"],
+                        ),
                         type="limit",
                         reduce=False,
                         margin_mode=margin_mode,
                         error=False,
                     )
                 )
-            
 
         print(f"Placing {len(tasks_close)} close SL / limit order...")
         await asyncio.gather(*tasks_close)  # Limit orders when in positions
@@ -252,16 +260,21 @@ async def execute_strategy_a_for_user(account_config,exchange):
                         exchange.place_trigger_order(
                             pair=pair,
                             side="buy",
-                            price= exchange.price_to_precision(pair, row[f"ma_low_{i+1}"]),
-                            trigger_price= exchange.price_to_precision(
+                            price=exchange.price_to_precision(
+                                pair, row[f"ma_low_{i+1}"]
+                            ),
+                            trigger_price=exchange.price_to_precision(
                                 pair, row[f"ma_low_{i+1}"] * 1.005
                             ),
-                            size=(
-                                (params[pair]["size"] * usdt_balance)
-                                / len(params[pair]["envelopes"])
-                                * size_leverage
-                            )
-                            / row[f"ma_low_{i+1}"],
+                            size=exchange.amount_to_precision(
+                                pair,
+                                (
+                                    (params[pair]["size"] * usdt_balance)
+                                    / len(params[pair]["envelopes"])
+                                    * size_leverage
+                                )
+                                / row[f"ma_low_{i+1}"],
+                            ),
                             type="limit",
                             reduce=False,
                             margin_mode=margin_mode,
@@ -273,16 +286,21 @@ async def execute_strategy_a_for_user(account_config,exchange):
                         exchange.place_trigger_order(
                             pair=pair,
                             side="sell",
-                            trigger_price= exchange.price_to_precision(
+                            trigger_price=exchange.price_to_precision(
                                 pair, row[f"ma_high_{i+1}"] * 0.995
                             ),
-                            price= exchange.price_to_precision(pair, row[f"ma_high_{i+1}"]),
-                            size=(
-                                (params[pair]["size"] * usdt_balance)
-                                / len(params[pair]["envelopes"])
-                                * size_leverage
-                            )
-                            / row[f"ma_high_{i+1}"],
+                            price=exchange.price_to_precision(
+                                pair, row[f"ma_high_{i+1}"]
+                            ),
+                            size=exchange.amount_to_precision(
+                                pair,
+                                (
+                                    (params[pair]["size"] * usdt_balance)
+                                    / len(params[pair]["envelopes"])
+                                    * size_leverage
+                                )
+                                / row[f"ma_high_{i+1}"],
+                            ),
                             type="limit",
                             reduce=False,
                             margin_mode=margin_mode,
@@ -293,10 +311,10 @@ async def execute_strategy_a_for_user(account_config,exchange):
         print(f"Placing {len(tasks_open)} open limit order...")
         await asyncio.gather(*tasks_open)  # Limit orders when not in positions
 
-        # Assurez-vous de fermer la session à la fin
         await exchange.close()
-        print(f"--- Exécution terminée pour {account_config['user_id']} à {datetime.datetime.now().strftime('%Y-%m-%d %H:%M:%S')} ---")
-
+        print(
+            f"--- Execution finished at {datetime.datetime.now().strftime('%Y-%m-%d %H:%M:%S')} ---"
+        )
     except Exception as e:
         await exchange.close()
         raise e
@@ -305,6 +323,6 @@ async def main():
     user_configs = fetch_user_configs()  # Récupère les configs utilisateur depuis DynamoDB
     tasks = [execute_strategy_a_for_user(config) for config in user_configs]
     await asyncio.gather(*tasks)
-
+    
 if __name__ == "__main__":
     asyncio.run(main())
