@@ -1,7 +1,6 @@
 import asyncio
 from database.db import fetch_user_configs
 from strategies.envelopes.strategie_a import execute_strategy_a_for_user
-from strategies.bolltrend.strategie_b import execute_strategy_b_for_user
 from utilities.bitget_perp import PerpBitget
 
 
@@ -20,10 +19,8 @@ async def main():
 
         if account_config["strategy"] == "A":
             await execute_strategy_a_for_user(account_config, exchange)
-        elif account_config["strategy"] == "B":
-            await execute_strategy_b_for_user(account_config, exchange)
-                
-        await exchange.close()
+        else:    
+            await exchange.close()
 
 if __name__ == "__main__":
     asyncio.run(main())
