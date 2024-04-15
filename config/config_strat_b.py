@@ -191,7 +191,7 @@ params2= {
         "bb_std": 2.25,
         "long_ma_window": 500
     },
-    "YFI/USDT": {
+    "TIA/USDT": {
         "wallet_exposure": 0.05,
         "bb_window": 100,
         "bb_std": 1,

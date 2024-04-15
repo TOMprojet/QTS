@@ -109,7 +109,7 @@ async def execute_strategy_b_for_user(account_config, exchange):
         print("Indicators loaded 100%")
 
         var = ValueAtRisk(df_list=df_list.copy())
-        var.update_cov(current_date=df_list["BTC/USDT:USDT"].index[-1], occurance_data=989)
+        var.update_cov(current_date=df_list["BTC/USDT"].index[-1], occurance_data=989)
         print("Value At Risk loaded 100%")
 
         usd_balance = float(exchange.get_usdt_equity())
