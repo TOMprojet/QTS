@@ -112,8 +112,9 @@ async def execute_strategy_b_for_user(account_config, exchange):
         var.update_cov(current_date=df_list["BTC/USDT"].index[-1], occurance_data=989)
         print("Value At Risk loaded 100%")
 
-        usd_balance = float(exchange.get_usdt_equity())
-        print("USD balance :", round(usd_balance, 2), "$")
+        usd_balance = await exchange.get_balance()
+        usd_balance = usd_balance.total
+        print(f"Balance: {round(usd_balance, 2)} USDT")
 
         positions_data = exchange.get_open_position()
         position_list = [
