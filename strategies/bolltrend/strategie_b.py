@@ -116,7 +116,7 @@ async def execute_strategy_b_for_user(account_config, exchange):
         usd_balance = usd_balance.total
         print(f"Balance: {round(usd_balance, 2)} USDT")
 
-        positions_data = exchange.get_open_positions()
+        positions_data = exchange.get_open_positions(pairs)
         position_list = [
             {"pair": d["symbol"], "side": d["side"], "size": float(d["contracts"]) * float(d["contractSize"]), "market_price":d["info"]["marketPrice"], "usd_size": float(d["contracts"]) * float(d["contractSize"]) * float(d["info"]["marketPrice"]), "open_price": d["entryPrice"]}
             for d in positions_data if d["symbol"] in df_list]
@@ -170,7 +170,7 @@ async def execute_strategy_b_for_user(account_config, exchange):
         for pair in df_list:
             positions_exposition[pair] = {"long":0, "short":0}
 
-        positions_data = exchange.get_open_position()
+        positions_data = exchange.get_open_positions(pairs)
         for pos in positions_data:
             if pos["symbol"] in df_list and pos["side"] == "long":
                 pct_exposition = (float(pos["contracts"]) * float(pos["contractSize"]) * float(pos["info"]["marketPrice"])) / usd_balance
