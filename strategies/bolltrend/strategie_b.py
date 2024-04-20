@@ -1,7 +1,9 @@
 import datetime
 import asyncio
+import ccxt
 import sys
 import ta
+import pandas as pd
 from utilities.bitget_perp import PerpBitget
 from database.db import fetch_user_configs
 from config.config_strat_b import params2
