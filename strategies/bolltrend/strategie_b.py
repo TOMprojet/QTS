@@ -182,11 +182,11 @@ async def execute_strategy_b_for_user(account_config, exchange):
         positions_data = await exchange.get_open_positions(pairs)
         for pos in positions_data:
             if pos.pair in df_list and pos.side == "long":
-                pct_exposition = (float(pos["contracts"]) * float(pos["contractSize"]) * float(pos["info"]["marketPrice"])) / usd_balance
+                pct_exposition = (float(pos.size) * float(pos.current_price)) / usd_balance
                 positions_exposition[pos["pair"]]["long"] += pct_exposition
                 long_exposition += pct_exposition
             elif pos.pair in df_list and pos.side == "short":
-                pct_exposition = (float(pos["contracts"]) * float(pos["contractSize"]) * float(pos["info"]["marketPrice"])) / usd_balance
+                pct_exposition = (float(pos.size) * float(pos.current_price)) / usd_balance
                 positions_exposition[pos["pair"]]["short"] += pct_exposition
                 short_exposition += pct_exposition
 
