@@ -156,10 +156,10 @@ async def execute_strategy_b_for_user(account_config, exchange):
                     exchange.place_market_order(pair, "sell", close_long_quantity, reduce=True)
                     positions_to_delete.append(pair)
 
-            elif position.side == "short" and close_short(row):
+            elif position["side"] == "short" and close_short(row):
                 close_short_market_price = last_price
                 close_short_quantity = float(
-                    exchange.convert_amount_to_precision(pair, position.size)
+                    exchange.convert_amount_to_precision(pair, position["size"])
                 )
                 exchange_close_short_quantity = close_short_quantity * close_short_market_price
                 print(
