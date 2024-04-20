@@ -141,9 +141,8 @@ async def execute_strategy_b_for_user(account_config, exchange):
             row = df_list[pair].iloc[-2]
             last_price = float(df_list[pair].iloc[-1]["close"])
             position = positions[pair]
-            print (position["side"])
 
-            if position["side"] == "long" :
+            if position["side"] == "long" and close_long(row):
                 close_long_market_price = last_price
                 close_long_quantity = float(
                     exchange.amount_to_precision(pair, position["size"])
@@ -175,11 +174,11 @@ async def execute_strategy_b_for_user(account_config, exchange):
                 )
                 if production:
                     await exchange.place_order(
-                        pair, 
-                        "buy", 
-                        close_short_quantity, 
-                        trigger_price=exchange.price_to_precision(pos.pair, pos.open_price * (1 + sl)), 
-                        size=exchange.amount_to_precision(pos.pair, pos.size), 
+                        pair=pos["pair"], 
+                        side=pos["side"], 
+                        price=close_short_market_price, 
+                        type="limit", 
+                        size=exchange_close_long_quantity, 
                         reduce=True)
                     positions_to_delete.append(pair)
 
