@@ -157,8 +157,8 @@ async def execute_strategy_b_for_user(account_config, exchange):
                         pair, 
                         "sell", 
                         close_long_quantity,
-                        trigger_price=exchange.price_to_precision(position, position.open_price * (1 - sl)),
-                        size=exchange.amount_to_precision(position.pair, position.size),
+                        trigger_price=exchange.price_to_precision(pos.pair, pos.open_price * (1 - sl)),
+                        size=exchange.amount_to_precision(pos.pair, pos.size),
                         reduce=True)
                     positions_to_delete.append(pair)
 
@@ -176,8 +176,8 @@ async def execute_strategy_b_for_user(account_config, exchange):
                         pair, 
                         "buy", 
                         close_short_quantity, 
-                        trigger_price=exchange.price_to_precision(position.pair, position.entry_price * (1 + sl)), 
-                        size=exchange.amount_to_precision(position.pair, position.size), 
+                        trigger_price=exchange.price_to_precision(pos.pair, pos.open_price * (1 + sl)), 
+                        size=exchange.amount_to_precision(pos.pair, pos.size), 
                         reduce=True)
                     positions_to_delete.append(pair)
 
