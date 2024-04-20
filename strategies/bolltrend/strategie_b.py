@@ -121,10 +121,10 @@ async def execute_strategy_b_for_user(account_config, exchange):
             {
                 "pair": position.pair,  # Supposant que symbol est un attribut de l'objet position
                 "side": position.side,
-                "size": position.contracts * position.contractSize,
-                "market_price": position.markPrice,
-                "usd_size": position.contracts * position.contractSize * position.markPrice,
-                "open_price": position.entryPrice
+                "size": exchange.amount_to_precision(position.pair, position.size),
+                "market_price": position.current_price,
+                "usd_size": exchange.amount_to_precision(position.pair, position.size) * position.current_price,
+                "open_price": position.entry_price
             }
             for position in positions_data if position.pair in df_list  # Vérifiez les noms d'attributs corrects
         ]
