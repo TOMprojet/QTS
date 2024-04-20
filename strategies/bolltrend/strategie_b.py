@@ -55,6 +55,7 @@ async def execute_strategy_b_for_user(account_config, exchange):
         tasks = [exchange.get_last_ohlcv(pair, tf, 50) for pair in pairs]
         dfs = await asyncio.gather(*tasks)
         df_list = dict(zip(pairs, dfs))
+        row = df_list[pair].iloc[-2]
 
         def open_long(row):
             if (
@@ -141,7 +142,7 @@ async def execute_strategy_b_for_user(account_config, exchange):
             row = df_list[pair].iloc[-2]
             last_price = float(df_list[pair].iloc[-1]["close"])
             position = positions[pair]
-            print(close_short(row))
+            print(close_long(row))
 
             if position["side"] == "long" and close_long(row):
                 close_long_market_price = last_price
