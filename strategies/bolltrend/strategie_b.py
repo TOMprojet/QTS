@@ -119,15 +119,16 @@ async def execute_strategy_b_for_user(account_config, exchange):
         positions_data = await exchange.get_open_positions(pairs)
         position_list = [
             {
-                "pair": d["pair"],  # ou d["symbol"] si c'est la clé utilisée dans votre dictionnaire
-                "side": d["side"],
-                "size": float(d["contracts"]) * float(d["contractSize"]),
-                "current_price": d["market_price"],
-                "usd_size": float(d["contracts"]) * float(d["contractSize"]) * float(d["info"]["marketPrice"]),
-                "entry_price": d["entryPrice"]
+                "pair": position.symbol,  # Supposant que symbol est un attribut de l'objet position
+                "side": position.side,
+                "size": position.contracts * position.contractSize,
+                "market_price": position.markPrice,
+                "usd_size": position.contracts * position.contractSize * position.markPrice,
+                "open_price": position.entryPrice
             }
-            for d in positions_data if d["pair"] in df_list
+            for position in positions_data if position.symbol in df_list  # Vérifiez les noms d'attributs corrects
         ]
+
 
         positions = {}
         for pos in position_list:
