@@ -128,7 +128,6 @@ async def execute_strategy_b_for_user(account_config, exchange):
             }
             for position in positions_data if position.pair in df_list  # Vérifiez les noms d'attributs corrects
         ]
-        print(position.side)
 
         positions = {}
         for pos in position_list:
@@ -144,6 +143,7 @@ async def execute_strategy_b_for_user(account_config, exchange):
             position = positions[pair]
 
             if position["side"] == "long" and close_long(row):
+                print (position["side"])
                 close_long_market_price = last_price
                 close_long_quantity = float(
                     exchange.convert_amount_to_precision(pair, position["size"])
