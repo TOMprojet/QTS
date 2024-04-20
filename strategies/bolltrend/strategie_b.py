@@ -154,8 +154,8 @@ async def execute_strategy_b_for_user(account_config, exchange):
                 )
                 if production:
                     await exchange.place_order(
-                        pair=position["pair"], 
-                        side=position["side"], 
+                        pair=pos["pair"], 
+                        side=pos["side"], 
                         price=close_long_market_price,
                         type="limit",
                         size=close_long_quantity,
