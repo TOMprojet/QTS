@@ -119,7 +119,7 @@ async def execute_strategy_b_for_user(account_config, exchange):
         positions_data = await exchange.get_open_positions(pairs)
         position_list = [
             {
-                "pair": position.symbol,  # Supposant que symbol est un attribut de l'objet position
+                "pair": position.pair,  # Supposant que symbol est un attribut de l'objet position
                 "side": position.side,
                 "size": position.contracts * position.contractSize,
                 "market_price": position.markPrice,
