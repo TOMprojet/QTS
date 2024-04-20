@@ -146,7 +146,7 @@ async def execute_strategy_b_for_user(account_config, exchange):
             if position["side"] == "long" :
                 close_long_market_price = last_price
                 close_long_quantity = float(
-                    exchange.convert_amount_to_precision(pair, position["size"])
+                    exchange.amount_to_precision(pair, position["size"])
                 )
                 exchange_close_long_quantity = close_long_quantity * close_long_market_price
                 print(
@@ -159,7 +159,7 @@ async def execute_strategy_b_for_user(account_config, exchange):
             elif position["side"] == "short" and close_short(row):
                 close_short_market_price = last_price
                 close_short_quantity = float(
-                    exchange.convert_amount_to_precision(pair, position["size"])
+                    exchange.amount_to_precision(pair, position["size"])
                 )
                 exchange_close_short_quantity = close_short_quantity * close_short_market_price
                 print(
@@ -209,8 +209,8 @@ async def execute_strategy_b_for_user(account_config, exchange):
                         if temp_var > max_var or temp_long_exposition > max_side_exposition:
                             print(f"Blocked open LONG on {pair}, because next VaR: - {round(current_var, 2)}%")
                         else:
-                            long_quantity = float(exchange.convert_amount_to_precision(pair, float(
-                                exchange.convert_amount_to_precision(pair, long_quantity_in_usd / long_market_price)
+                            long_quantity = float(exchange.amount_to_precision(pair, float(
+                                exchange.amount_to_precision(pair, long_quantity_in_usd / long_market_price)
                             )))
                             exchange_long_quantity = long_quantity * long_market_price
                             print(
@@ -231,8 +231,8 @@ async def execute_strategy_b_for_user(account_config, exchange):
                         if temp_var > max_var or temp_short_exposition > max_side_exposition:
                             print(f"Blocked open SHORT on {pair}, because next VaR: - {round(current_var, 2)}%")
                         else:
-                            short_quantity = float(exchange.convert_amount_to_precision(pair, float(
-                                exchange.convert_amount_to_precision(pair, short_quantity_in_usd / short_market_price)
+                            short_quantity = float(exchange.amount_to_precision(pair, float(
+                                exchange.amount_to_precision(pair, short_quantity_in_usd / short_market_price)
                             )))
                             exchange_short_quantity = short_quantity * short_market_price
                             print(
