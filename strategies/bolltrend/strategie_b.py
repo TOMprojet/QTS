@@ -143,8 +143,7 @@ async def execute_strategy_b_for_user(account_config, exchange):
             position = positions[pair]
             print (position["side"])
 
-            if position["side"] == "long" and close_long(row):
-                print (position["side"])
+            if position["side"] == "long" :
                 close_long_market_price = last_price
                 close_long_quantity = float(
                     exchange.convert_amount_to_precision(pair, position["size"])
