@@ -153,7 +153,7 @@ async def execute_strategy_b_for_user(account_config, exchange):
                     f"Place Close Long Market Order: {close_long_quantity} {pair[:-5]} at the price of {close_long_market_price}$ ~{round(exchange_close_long_quantity, 2)}$"
                 )
                 if production:
-                    exchange.place_trigger_order(
+                    await exchange.place_trigger_order(
                         pair, 
                         "sell", 
                         close_long_quantity,
@@ -172,7 +172,7 @@ async def execute_strategy_b_for_user(account_config, exchange):
                     f"Place Close Short Market Order: {close_short_quantity} {pair[:-5]} at the price of {close_short_market_price}$ ~{round(exchange_close_short_quantity, 2)}$"
                 )
                 if production:
-                    exchange.place_trigger_order(
+                    await exchange.place_trigger_order(
                         pair, 
                         "buy", 
                         close_short_quantity, 
