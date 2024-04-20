@@ -128,7 +128,7 @@ async def execute_strategy_b_for_user(account_config, exchange):
             }
             for position in positions_data if position.pair in df_list  # Vérifiez les noms d'attributs corrects
         ]
-
+        print(position.side)
 
         positions = {}
         for pos in position_list:
