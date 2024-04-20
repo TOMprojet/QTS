@@ -153,12 +153,14 @@ async def execute_strategy_b_for_user(account_config, exchange):
                     f"Place Close Long Market Order: {close_long_quantity} {pair[:-5]} at the price of {close_long_market_price}$ ~{round(exchange_close_long_quantity, 2)}$"
                 )
                 if production:
-                    await exchange.place_trigger_order(
-                        pair, 
-                        "sell", 
-                        close_long_quantity,
-                        trigger_price=exchange.price_to_precision(pos["pair"], pos["open_price"] * (1 - sl)),
-                        size=exchange.amount_to_precision(pos["pair"], pos["size"]),
+                    await exchange.place_order(
+                        pair=position["pair"], 
+                        side=position["side"], 
+                        price=close_long_market_price,
+                        type="limit",
+                        size=close_long_quantity,
+                        margin_mode=margin_mode,
+                        error=False,
                         reduce=True)
                     positions_to_delete.append(pair)
 
@@ -172,7 +174,7 @@ async def execute_strategy_b_for_user(account_config, exchange):
                     f"Place Close Short Market Order: {close_short_quantity} {pair[:-5]} at the price of {close_short_market_price}$ ~{round(exchange_close_short_quantity, 2)}$"
                 )
                 if production:
-                    await exchange.place_trigger_order(
+                    await exchange.place_order(
                         pair, 
                         "buy", 
                         close_short_quantity, 
