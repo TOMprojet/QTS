@@ -141,7 +141,7 @@ async def execute_strategy_b_for_user(account_config, exchange):
             row = df_list[pair].iloc[-2]
             last_price = float(df_list[pair].iloc[-1]["close"])
             position = positions[pair]
-            print(close_long(row))
+            print(close_short(row))
 
             if position["side"] == "long" and close_long(row):
                 close_long_market_price = last_price
