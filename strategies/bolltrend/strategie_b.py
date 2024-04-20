@@ -68,9 +68,10 @@ async def execute_strategy_b_for_user(account_config, exchange):
 
         def close_long(row):
             if (row['close'] < row['ma_band']):
-                print(True)
+                return True
             else:
-                print(False)
+                return False
+        print(close_long(row))
 
         def open_short(row):
             if (
@@ -178,7 +179,7 @@ async def execute_strategy_b_for_user(account_config, exchange):
                         side=pos["side"], 
                         price=close_short_market_price, 
                         type="limit", 
-                        size=exchange_close_long_quantity, 
+                        size=close_short_quantity, 
                         reduce=True)
                     positions_to_delete.append(pair)
 
