@@ -8,6 +8,7 @@ from utilities.bitget_perp import PerpBitget
 from database.db import fetch_user_configs
 from config.config_strat_b import params2
 from utilities.var import ValueAtRisk
+from utilities.custom_indicators import get_n_columns
 import copy
 
 # Ajustement pour la compatibilité Windows avec asyncio
@@ -146,6 +147,12 @@ async def execute_strategy_b_for_user(account_config, exchange):
             position = positions[pair]
             print(row['close'])
             print(row['ma_band'])
+            print(row['lower_band'])
+            print(row['higher_band'])
+            print(row['n1_higher_band'])
+            print(row['long_ma'])
+            print(row['n1_lower_band'])
+            print(row['n1_close'])
 
             if position["side"] == "long" and close_long(row):
                 close_long_market_price = last_price
