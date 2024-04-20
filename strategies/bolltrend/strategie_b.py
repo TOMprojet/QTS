@@ -68,10 +68,8 @@ async def execute_strategy_b_for_user(account_config, exchange):
 
         def close_long(row):
             if (row['close'] < row['ma_band']):
-                return True
                 print(True)
             else:
-                return False
                 print(False)
 
         def open_short(row):
