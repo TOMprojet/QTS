@@ -123,7 +123,7 @@ async def execute_strategy_b_for_user(account_config, exchange):
                 "side": position.side,
                 "size": exchange.amount_to_precision(position.pair, position.size),
                 "market_price": position.current_price,
-                "usd_size": exchange.amount_to_precision(position.pair, position.size) * position.current_price,
+                "usd_size": float(exchange.amount_to_precision(position.pair, position.size)) * float(position.current_price),
                 "open_price": position.entry_price
             }
             for position in positions_data if position.pair in df_list  # Vérifiez les noms d'attributs corrects
