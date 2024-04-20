@@ -126,7 +126,7 @@ async def execute_strategy_b_for_user(account_config, exchange):
                 "usd_size": position.contracts * position.contractSize * position.markPrice,
                 "open_price": position.entryPrice
             }
-            for position in positions_data if position.symbol in df_list  # Vérifiez les noms d'attributs corrects
+            for position in positions_data if position.pair in df_list  # Vérifiez les noms d'attributs corrects
         ]
 
 
