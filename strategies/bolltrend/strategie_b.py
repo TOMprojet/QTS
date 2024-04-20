@@ -153,7 +153,13 @@ async def execute_strategy_b_for_user(account_config, exchange):
                     f"Place Close Long Market Order: {close_long_quantity} {pair[:-5]} at the price of {close_long_market_price}$ ~{round(exchange_close_long_quantity, 2)}$"
                 )
                 if production:
-                    exchange.place_trigger_order(pair, "sell", close_long_quantity, reduce=True)
+                    exchange.place_trigger_order(
+                        pair, 
+                        "sell", 
+                        close_long_quantity,
+                        trigger_price=exchange.price_to_precision(position.pair, position.entry_price * (1 - sl)),
+                        size=exchange.amount_to_precision(position.pair, position.size),
+                        reduce=True)
                     positions_to_delete.append(pair)
 
             elif position["side"] == "short" and close_short(row):
@@ -166,7 +172,13 @@ async def execute_strategy_b_for_user(account_config, exchange):
                     f"Place Close Short Market Order: {close_short_quantity} {pair[:-5]} at the price of {close_short_market_price}$ ~{round(exchange_close_short_quantity, 2)}$"
                 )
                 if production:
-                    exchange.place_trigger_order(pair, "buy", close_short_quantity, reduce=True)
+                    exchange.place_trigger_order(
+                        pair, 
+                        "buy", 
+                        close_short_quantity, 
+                        trigger_price=exchange.price_to_precision(position.pair, position.entry_price * (1 + sl)), 
+                        size=exchange.amount_to_precision(position.pair, position.size), 
+                        reduce=True)
                     positions_to_delete.append(pair)
 
         for pair in positions_to_delete:
