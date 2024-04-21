@@ -111,8 +111,6 @@ async def execute_strategy_b_for_user(account_config, exchange):
             df['iloc'] = range(len(df))
 
         print("Indicators loaded 100%")
-        import pandas as pd
-        import ta
 
         # Supposons que 'df' est votre DataFrame et que vous avez une série de 'close'.
         sample_df = df.head(30)  # Assurez-vous que le nombre de lignes est supérieur à la fenêtre de la Bollinger Bands
