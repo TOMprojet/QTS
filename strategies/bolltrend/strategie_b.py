@@ -41,7 +41,6 @@ async def execute_strategy_b_for_user(account_config, exchange):
                 del params2[pair]
 
         pairs = list(params2.keys())
-        print(pairs)
 
         try:
             print(f"Setting {margin_mode} x{exchange_leverage} on {len(pairs)} pairs...")
