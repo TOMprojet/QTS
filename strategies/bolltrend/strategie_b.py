@@ -160,7 +160,7 @@ async def execute_strategy_b_for_user(account_config, exchange):
                         pair, 
                         side=pos["side"], 
                         price=close_long_market_price,
-                        type="limit",
+                        type="market",
                         size=close_long_quantity,
                         margin_mode=margin_mode,
                         error=False,
@@ -181,7 +181,7 @@ async def execute_strategy_b_for_user(account_config, exchange):
                         pair, 
                         side=pos["side"], 
                         price=close_short_market_price, 
-                        type="limit", 
+                        type="market", 
                         size=close_short_quantity, 
                         reduce=True)
                     positions_to_delete.append(pair)
