@@ -183,7 +183,9 @@ async def execute_strategy_b_for_user(account_config, exchange):
                         price=close_short_market_price, 
                         type="market", 
                         size=close_short_quantity, 
-                        reduce=True)
+                        reduce=True,
+                        margin_mode=margin_mode,
+                        error=False)
                     positions_to_delete.append(pair)
 
         for pair in positions_to_delete:
