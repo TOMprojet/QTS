@@ -111,22 +111,8 @@ async def execute_strategy_b_for_user(account_config, exchange):
             df['iloc'] = range(len(df))
 
         print("Indicators loaded 100%")
-        # Supposons que df est votre DataFrame et 'close' est la colonne contenant les prix de clôture.
-        print(df["close"].isna().sum())  # Imprimez le nombre de NaN dans la colonne 'close'
-
-        # Calculez les bandes de Bollinger et imprimez les résultats pour les vérifier avant de les ajouter au DataFrame.
-        from ta.volatility import BollingerBands
-
-        # Vérifiez que vous avez une série sans NaN et avec suffisamment de données.
-        print(df["close"].dropna().shape)
-
-        # Calculez les bandes de Bollinger.
-        bb_indicator = BollingerBands(close=df["close"], window=params["bb_window"], window_dev=params["bb_std"])
-
-        # Imprimez les bandes pour voir si elles sont calculées correctement.
-        print(bb_indicator.bollinger_lband().head())
-        print(bb_indicator.bollinger_hband().head())
-        print(bb_indicator.bollinger_mavg().head())
+        # Imprimez les premières lignes de la colonne 'close' pour vérifier les données.
+        print(df['close'].head())
 
 
 
