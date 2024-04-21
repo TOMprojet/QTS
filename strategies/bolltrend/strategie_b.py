@@ -111,10 +111,15 @@ async def execute_strategy_b_for_user(account_config, exchange):
             df['iloc'] = range(len(df))
 
         print("Indicators loaded 100%")
-        print(df["n1_higher_band"])
-        print(df["n1_lower_band"])
-        print(df['long_ma'])
-        
+        print(df["close"].isna().sum())  # pour voir s'il y a des valeurs NaN dans la colonne 'close'
+
+        # Vérifiez si vos paramètres sont valides
+        print(params["bb_window"], params["bb_std"])
+
+        # Après avoir calculé les bandes de Bollinger, vérifiez les premières lignes pour voir s'il y a des valeurs NaN
+        print(df[['lower_band', 'higher_band', 'ma_band']].head())
+
+
         var = ValueAtRisk(df_list=df_list.copy())
         var.update_cov(current_date=df_list["BTC/USDT"].index[-1], occurance_data=989)
         print("Value At Risk loaded 100%")
