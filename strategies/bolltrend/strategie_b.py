@@ -41,6 +41,7 @@ async def execute_strategy_b_for_user(account_config, exchange):
                 del params2[pair]
 
         pairs = list(params2.keys())
+        print(pairs)
 
         try:
             print(f"Setting {margin_mode} x{exchange_leverage} on {len(pairs)} pairs...")
@@ -53,12 +54,6 @@ async def execute_strategy_b_for_user(account_config, exchange):
             await asyncio.gather(*tasks)  # set leverage and margin mode for all pairs
         except Exception as e:
             print(e)
-
-        print(f"Getting data and indicators on {len(pairs)} pairs...")
-        tasks = [exchange.get_last_ohlcv(pair, tf, 50) for pair in pairs]
-        dfs = await asyncio.gather(*tasks)
-        df_list = dict(zip(pairs, dfs))
-        row = df_list[pair].iloc[-2]
 
         def open_long(row):
             if (
@@ -93,6 +88,16 @@ async def execute_strategy_b_for_user(account_config, exchange):
                 return False
 
         print(f"--- Bollinger Trend on {len(params2)} tokens {tf} Leverage x{exchange_leverage} ---")
+
+        # Get data
+        df_list = {}
+        for pair in pairs:
+            temp_data = exchange.get_more_last_ohlcv(pair, tf, 1000)
+            if len(temp_data) == 990:
+                df_list[pair] = temp_data
+            else:
+                print(f"Pair {pair} not loaded, length: {len(temp_data)}")
+        print("Data OHLCV loaded 100%")
 
         for pair in df_list:
             df = df_list[pair]
