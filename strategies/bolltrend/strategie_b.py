@@ -112,19 +112,6 @@ async def execute_strategy_b_for_user(account_config, exchange):
 
         print("Indicators loaded 100%")
 
-        # Supposons que 'df' est votre DataFrame et que vous avez une série de 'close'.
-        sample_df = df.head(30)  # Assurez-vous que le nombre de lignes est supérieur à la fenêtre de la Bollinger Bands
-        bol_band = ta.volatility.BollingerBands(close=sample_df['close'], window=20, window_dev=2)
-
-        sample_df['lower_band'] = bol_band.bollinger_lband()
-        sample_df['higher_band'] = bol_band.bollinger_hband()
-        sample_df['ma_band'] = bol_band.bollinger_mavg()
-
-        print(sample_df[['close', 'lower_band', 'higher_band', 'ma_band']])
-
-
-
-
         var = ValueAtRisk(df_list=df_list.copy())
         var.update_cov(current_date=df_list["BTC/USDT"].index[-1], occurance_data=989)
         print("Value At Risk loaded 100%")
