@@ -6,7 +6,7 @@ from utilities.bitget_perp import PerpBitget
 
 async def main():
     # Récupérer les configurations utilisateur.
-    user_configs = fetch_user_configs()  # Assurez-vous que cette fonction est asynchrone si nécessaire.
+    user_configs = await fetch_user_configs() 
 
     # Créer une tâche pour chaque utilisateur et stratégie.
     tasks = []
