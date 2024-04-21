@@ -111,8 +111,19 @@ async def execute_strategy_b_for_user(account_config, exchange):
             df['iloc'] = range(len(df))
 
         print("Indicators loaded 100%")
-        # Imprimez les premières lignes de la colonne 'close' pour vérifier les données.
-        print(df['close'].head())
+        import pandas as pd
+        import ta
+
+        # Supposons que 'df' est votre DataFrame et que vous avez une série de 'close'.
+        sample_df = df.head(30)  # Assurez-vous que le nombre de lignes est supérieur à la fenêtre de la Bollinger Bands
+        bol_band = ta.volatility.BollingerBands(close=sample_df['close'], window=20, window_dev=2)
+
+        sample_df['lower_band'] = bol_band.bollinger_lband()
+        sample_df['higher_band'] = bol_band.bollinger_hband()
+        sample_df['ma_band'] = bol_band.bollinger_mavg()
+
+        print(sample_df[['close', 'lower_band', 'higher_band', 'ma_band']])
+
 
 
 
