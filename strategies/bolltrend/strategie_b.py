@@ -178,7 +178,7 @@ async def execute_strategy_b_for_user(account_config, exchange):
                 )
                 if production:
                     await exchange.place_order(
-                        pair+":USDT", 
+                        pair, 
                         side=pos["side"], 
                         price=close_short_market_price, 
                         type="limit", 
