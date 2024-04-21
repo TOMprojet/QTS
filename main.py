@@ -23,7 +23,7 @@ async def main():
             task = execute_strategy_b_for_user(account_config, exchange)
         else:
             continue  # Si aucune stratégie n'est définie, continuez avec le prochain utilisateur.
-        
+        await exchange.close()
         # Ajouter la coroutine de la tâche à la liste des tâches à exécuter.
         tasks.append(task)
 
