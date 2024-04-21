@@ -180,7 +180,7 @@ async def execute_strategy_b_for_user(account_config, exchange):
                 if production:
                     await exchange.place_order(
                         pair, 
-                        side=invert_side[position.side],  
+                        side=invert_side[position["side"]],  
                         type="market", 
                         size=close_short_quantity,
                         price=close_short_market_price, 
