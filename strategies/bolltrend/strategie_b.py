@@ -92,7 +92,7 @@ async def execute_strategy_b_for_user(account_config, exchange):
         # Get data
         df_list = {}
         for pair in pairs:
-            temp_data = exchange.get_last_ohlcv(pair, tf, 1000)
+            temp_data = await exchange.get_last_ohlcv(pair, tf, 1000)
             if len(temp_data) == 990:
                 df_list[pair] = temp_data
             else:
