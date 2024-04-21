@@ -159,7 +159,7 @@ async def execute_strategy_b_for_user(account_config, exchange):
                 )
                 if production:
                     await exchange.place_order(
-                        pair=pos["pair"], 
+                        pair, 
                         side=pos["side"], 
                         price=close_long_market_price,
                         type="limit",
@@ -180,11 +180,11 @@ async def execute_strategy_b_for_user(account_config, exchange):
                 )
                 if production:
                     await exchange.place_order(
-                        pair=pos["pair"], 
+                        pair, 
                         side=pos["side"], 
                         price=close_short_market_price, 
                         type="limit", 
-                        size=exchange_close_long_quantity, 
+                        size=close_long_quantity, 
                         reduce=True)
                     positions_to_delete.append(pair)
 
