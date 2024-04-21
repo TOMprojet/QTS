@@ -27,6 +27,7 @@ async def execute_strategy_b_for_user(account_config, exchange):
     max_var = 1
     max_side_exposition = 1
     production = True
+    invert_side = {"long": "sell", "short": "buy"}
 
 
     # Configuration initiale de l'échange, telle que le chargement des marchés
@@ -179,9 +180,10 @@ async def execute_strategy_b_for_user(account_config, exchange):
                 if production:
                     await exchange.place_order(
                         pair, 
-                        side=pos["side"],  
+                        side=invert_side[position.side],  
                         type="market", 
-                        size=close_short_quantity, 
+                        size=close_short_quantity,
+                        price=close_short_market_price, 
                         reduce=True,
                         margin_mode=margin_mode,
                         error=False)
