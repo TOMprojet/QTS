@@ -90,14 +90,10 @@ async def execute_strategy_b_for_user(account_config, exchange):
         print(f"--- Bollinger Trend on {len(params2)} tokens {tf} Leverage x{exchange_leverage} ---")
 
         # Get data
-        df_list = {}
-        for pair in pairs:
-            temp_data = await exchange.get_last_ohlcv(pair, tf, 1000)
-            if len(temp_data) == 990:
-                df_list[pair] = temp_data
-            else:
-                print(f"Pair {pair} not loaded, length: {len(temp_data)}")
-        print("Data OHLCV loaded 100%")
+        print(f"Getting data and indicators on {len(pairs)} pairs...")
+        tasks = [exchange.get_last_ohlcv(pair, tf, 1000) for pair in pairs]
+        dfs = await asyncio.gather(*tasks)
+        df_list = dict(zip(pairs, dfs))
 
         for pair in df_list:
             df = df_list[pair]
