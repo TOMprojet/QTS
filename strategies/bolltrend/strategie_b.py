@@ -25,6 +25,7 @@ async def execute_strategy_b_for_user(account_config, exchange):
     sl = 0.3  # Stop loss en pourcentage
     size_leverage = 5
     max_var = 1
+    type = ["long", "short"]
     max_side_exposition = 1
     production = True
     invert_side = {"long": "sell", "short": "buy"}
