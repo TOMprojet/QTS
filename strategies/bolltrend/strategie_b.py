@@ -260,7 +260,7 @@ async def execute_strategy_b_for_user(account_config, exchange):
                                 f"Place Open Short Market Order: {short_quantity} {pair[:-5]} at the price of {short_market_price}$ ~{round(exchange_short_quantity, 2)}$"
                             )
                             if production:
-                                exchange.place_order(pair, "sell", short_quantity, size=exchange.amount_to_precision(pair, short_quantity_in_usd), reduce=False)
+                                exchange.place_order(pair, "sell", short_quantity, reduce=False)
                                 positions_exposition[pair]["short"] += (short_quantity_in_usd / usd_balance)
                                 short_exposition += (short_quantity_in_usd / usd_balance)
                     
