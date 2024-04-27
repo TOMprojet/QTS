@@ -13,7 +13,7 @@ if sys.platform == "win32":
 async def execute_strategy_a_for_user(account_config, exchange):
     print(f"--- Exécution commencée pour {account_config['user_id']} à {datetime.datetime.now().strftime('%Y-%m-%d %H:%M:%S')} ---")
 
-    margin_mode = "isolated"  # isolated or crossed
+    margin_mode = "crossed"  # isolated or crossed
     exchange_leverage = 3
     tf = "1h"
     size_leverage = 5
