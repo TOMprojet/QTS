@@ -20,7 +20,7 @@ async def execute_strategy_b_for_user(account_config, exchange):
 
     # Exemple de configuration de stratégie. Adaptez ceci selon votre logique de trading spécifique.
     margin_mode = "crossed"  # Ou 'isolated'
-    exchange_leverage = 1  # Exemple de levier
+    exchange_leverage = 5  # Exemple de levier
     tf = "1h"  # Intervalle de temps pour les données OHLCV
     sl = 0.3  # Stop loss en pourcentage
     size_leverage = 1
