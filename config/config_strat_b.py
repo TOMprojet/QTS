@@ -1,12 +1,12 @@
 params2= {
     "BTC/USDT": {
-        "wallet_exposure": 0.2,
+        "wallet_exposure": 0.1,
         "bb_window": 100,
         "bb_std": 2.25,
         "long_ma_window": 500
     },
     "ETH/USDT": {
-        "wallet_exposure": 0.2,
+        "wallet_exposure": 0.1,
         "bb_window": 100,
         "bb_std": 1,
         "long_ma_window": 500
