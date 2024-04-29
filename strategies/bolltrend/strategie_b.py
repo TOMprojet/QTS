@@ -218,6 +218,8 @@ async def execute_strategy_b_for_user(account_config, exchange):
             if pair not in positions:
                 try:
                     row = df_list[pair].iloc[-2]
+                    print(open_short(row), pair)
+                    print(open_long(row), pair)
                     last_price = float(df_list[pair].iloc[-1]["close"])
                     pct_sizing = params2[pair]["wallet_exposure"]
                     if open_long(row) and "long" in type:
