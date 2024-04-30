@@ -240,7 +240,7 @@ async def execute_strategy_b_for_user(account_config, exchange):
                                 f"Place Open Long Market Order: {long_quantity} {pair} at the price of {long_market_price}$ ~{round(exchange_long_quantity, 2)}$"
                             )
                             if production:
-                                await exchange.place_order(pair, "buy", long_quantity, size=exchange.amount_to_precision(pair, long_quantity_in_usd), type='market', reduce=False)
+                                await exchange.place_order(pair, "buy", size=long_quantity, price=exchange.amount_to_precision(pair, long_quantity_in_usd), type='market', reduce=False)
                                 positions_exposition[pair]["long"] += (long_quantity_in_usd / usd_balance)
                                 long_exposition += (long_quantity_in_usd / usd_balance)
 
@@ -262,7 +262,7 @@ async def execute_strategy_b_for_user(account_config, exchange):
                                 f"Place Open Short Market Order: {short_quantity} {pair} at the price of {short_market_price}$ ~{round(exchange_short_quantity, 2)}$"
                             )
                             if production:
-                                await exchange.place_order(pair, "sell", size=short_quantity,price=exchange.amount_to_precision(pair, short_quantity_in_usd), type='market', reduce=False)
+                                await exchange.place_order(pair, "sell", size=short_quantity, price=exchange.amount_to_precision(pair, short_quantity_in_usd), type='market', reduce=False)
                                 positions_exposition[pair]["short"] += (short_quantity_in_usd / usd_balance)
                                 short_exposition += (short_quantity_in_usd / usd_balance)
                     
