@@ -23,7 +23,7 @@ async def execute_strategy_b_for_user(account_config, exchange):
     exchange_leverage = 1  # Exemple de levier
     tf = "1h"  # Intervalle de temps pour les données OHLCV
     sl = 0.3  # Stop loss en pourcentage
-    size_leverage = 1
+    size_leverage = 2
     max_var = 1
     type = ["long", "short"]
     max_side_exposition = 2
