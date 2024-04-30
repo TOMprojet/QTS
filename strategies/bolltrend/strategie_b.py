@@ -237,7 +237,7 @@ async def execute_strategy_b_for_user(account_config, exchange):
                             )))
                             exchange_long_quantity = long_quantity * long_market_price
                             print(
-                                f"Place Open Long Market Order: {long_quantity} {pair[:-5]} at the price of {long_market_price}$ ~{round(exchange_long_quantity, 2)}$"
+                                f"Place Open Long Market Order: {long_quantity} {pair} at the price of {long_market_price}$ ~{round(exchange_long_quantity, 2)}$"
                             )
                             if production:
                                 await exchange.place_order(pair, "buy", long_quantity, size=exchange.amount_to_precision(pair, long_quantity_in_usd), type='market', reduce=False)
@@ -259,7 +259,7 @@ async def execute_strategy_b_for_user(account_config, exchange):
                             )))
                             exchange_short_quantity = short_quantity * short_market_price
                             print(
-                                f"Place Open Short Market Order: {short_quantity} {pair[:-5]} at the price of {short_market_price}$ ~{round(exchange_short_quantity, 2)}$"
+                                f"Place Open Short Market Order: {short_quantity} {pair} at the price of {short_market_price}$ ~{round(exchange_short_quantity, 2)}$"
                             )
                             if production:
                                 await exchange.place_order(pair, "sell", short_quantity,size=exchange.amount_to_precision(pair, short_quantity_in_usd), type='market', reduce=False)
