@@ -148,18 +148,6 @@ async def execute_strategy_a_for_user(account_config, exchange):
                 f"Current position on {position.pair} {position.side} - {position.size} ~ {position.usd_size} $"
             )
             row = df_list[position.pair].iloc[-2]
-            tasks_close.append(
-                exchange.place_order(
-                    pair=position.pair,
-                    side=invert_side[position.side],
-                    price=row["ma_base"],
-                    size=exchange.amount_to_precision(position.pair, position.size),
-                    type="limit",
-                    reduce=True,
-                    margin_mode=margin_mode,
-                    error=False,
-                )
-            )
             if position.side == "long":
                 sl_side = "sell"
                 sl_price = exchange.price_to_precision(
