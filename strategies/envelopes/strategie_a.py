@@ -149,88 +149,116 @@ async def execute_strategy_a_for_user(account_config, exchange):
             )
             row = df_list[position.pair].iloc[-2]
             if position.side == "long":
-                sl_side = "sell"
-                sl_price = exchange.price_to_precision(
-                    position.pair, position.entry_price * (1 - sl)
-                )
+                            tasks_close.append(
+                            exchange.place_trigger_order(
+                                pair=position.pair,
+                                side=invert_side[position.side],
+                                trigger_price=exchange.price_to_precision(position.pair,row["ma_base"] * 0.995),
+                                price=row["ma_base"],
+                                size=exchange.amount_to_precision(position.pair, position.size),
+                                type="market",
+                                reduce=True,
+                                margin_mode=margin_mode,
+                                error=False,
+                            )
+                        )  
             elif position.side == "short":
-                sl_side = "buy"
-                sl_price = exchange.price_to_precision(
-                    position.pair, position.entry_price * (1 + sl)
-                )
+                            tasks_close.append(
+                            exchange.place_trigger_order(
+                                pair=position.pair,
+                                side=invert_side[position.side],
+                                trigger_price=exchange.price_to_precision(position.pair,row["ma_base"] * 1.005),
+                                price=exchange.price_to_precision(position.pair,row["ma_base"]),
+                                size=exchange.amount_to_precision(position.pair, position.size),
+                                type="market",
+                                reduce=True,
+                                margin_mode=margin_mode,
+                                error=False,
+                            )
+                        )
+            if position.side == "long":
+                            sl_side = "sell"
+                            sl_price = exchange.price_to_precision(
+                                position.pair, position.entry_price * (1 - sl)
+                            )
+            elif position.side == "short":
+                            sl_side = "buy"
+                            sl_price = exchange.price_to_precision(
+                                position.pair, position.entry_price * (1 + sl)
+                            )
             tasks_close.append(
-                exchange.place_trigger_order(
-                    pair=position.pair,
-                    side=sl_side,
-                    trigger_price=sl_price,
-                    price=None,
-                    size=exchange.amount_to_precision(position.pair, position.size),
-                    type="market",
-                    reduce=True,
-                    margin_mode=margin_mode,
-                    error=False,
-                )
-            )
-            for i in range(
-                len(params[position.pair]["envelopes"])
-                - params[position.pair]["canceled_orders_buy"],
-                len(params[position.pair]["envelopes"]),
-            ):
-                tasks_open.append(
-                    exchange.place_trigger_order(
-                        pair=position.pair,
-                        side="buy",
-                        price=exchange.price_to_precision(
-                            position.pair, row[f"ma_low_{i+1}"]
-                        ),
-                        trigger_price=exchange.price_to_precision(
-                            position.pair, row[f"ma_low_{i+1}"] * 1.005
-                        ),
-                        size=exchange.amount_to_precision(
-                            position.pair,
-                            (
-                                (params[position.pair]["size"] * usdt_balance)
-                                / len(params[position.pair]["envelopes"])
-                                * size_leverage
+                            exchange.place_trigger_order(
+                                pair=position.pair,
+                                side=sl_side,
+                                trigger_price=sl_price,
+                                price=None,
+                                size=exchange.amount_to_precision(position.pair, position.size),
+                                type="market",
+                                reduce=True,
+                                margin_mode=margin_mode,
+                                error=False,
                             )
-                            / row[f"ma_low_{i+1}"],
-                        ),
-                        type="limit",
-                        reduce=False,
-                        margin_mode=margin_mode,
-                        error=False,
-                    )
-                )
+                        )
             for i in range(
-                len(params[position.pair]["envelopes"])
-                - params[position.pair]["canceled_orders_sell"],
-                len(params[position.pair]["envelopes"]),
-            ):
-                tasks_open.append(
-                    exchange.place_trigger_order(
-                        pair=position.pair,
-                        side="sell",
-                        trigger_price=exchange.price_to_precision(
-                            position.pair, row[f"ma_high_{i+1}"] * 0.995
-                        ),
-                        price=exchange.price_to_precision(
-                            position.pair, row[f"ma_high_{i+1}"]
-                        ),
-                        size=exchange.amount_to_precision(
-                            position.pair,
-                            (
-                                (params[position.pair]["size"] * usdt_balance)
-                                / len(params[position.pair]["envelopes"])
-                                * size_leverage
+                            len(params[position.pair]["envelopes"])
+                            - params[position.pair]["canceled_orders_buy"],
+                            len(params[position.pair]["envelopes"]),
+                        ):
+                            tasks_open.append(
+                                exchange.place_trigger_order(
+                                    pair=position.pair,
+                                    side="buy",
+                                    price=exchange.price_to_precision(
+                                        position.pair, row[f"ma_low_{i+1}"]
+                                    ),
+                                    trigger_price=exchange.price_to_precision(
+                                        position.pair, row[f"ma_low_{i+1}"] * 1.005
+                                    ),
+                                    size=exchange.amount_to_precision(
+                                        position.pair,
+                                        (
+                                            (params[position.pair]["size"] * usdt_balance)
+                                            / len(params[position.pair]["envelopes"])
+                                            * size_leverage
+                                        )
+                                        / row[f"ma_low_{i+1}"],
+                                    ),
+                                    type="limit",
+                                    reduce=False,
+                                    margin_mode=margin_mode,
+                                    error=False,
+                                )
                             )
-                            / row[f"ma_high_{i+1}"],
-                        ),
-                        type="limit",
-                        reduce=False,
-                        margin_mode=margin_mode,
-                        error=False,
-                    )
-                )
+            for i in range(
+                            len(params[position.pair]["envelopes"])
+                            - params[position.pair]["canceled_orders_sell"],
+                            len(params[position.pair]["envelopes"]),
+                        ):
+                            tasks_open.append(
+                                exchange.place_trigger_order(
+                                    pair=position.pair,
+                                    side="sell",
+                                    trigger_price=exchange.price_to_precision(
+                                        position.pair, row[f"ma_high_{i+1}"] * 0.995
+                                    ),
+                                    price=exchange.price_to_precision(
+                                        position.pair, row[f"ma_high_{i+1}"]
+                                    ),
+                                    size=exchange.amount_to_precision(
+                                        position.pair,
+                                        (
+                                            (params[position.pair]["size"] * usdt_balance)
+                                            / len(params[position.pair]["envelopes"])
+                                            * size_leverage
+                                        )
+                                        / row[f"ma_high_{i+1}"],
+                                    ),
+                                    type="limit",
+                                    reduce=False,
+                                    margin_mode=margin_mode,
+                                    error=False,
+                                )
+                            )
 
         print(f"Placing {len(tasks_close)} close SL / limit order...")
         await asyncio.gather(*tasks_close)  # Limit orders when in positions
